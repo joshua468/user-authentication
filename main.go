@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -16,10 +17,14 @@ import (
 
 var (
 	db  *gorm.DB
-	cfg *config.Config
+	cfg config.Config
 )
 
 func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
 	// Load configuration
 	cfg = config.LoadConfig()
 
@@ -71,6 +76,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Define HTTP handler
 	http.HandleFunc("/", Handler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	// Start HTTP server
+	port := ":8080"
+	log.Printf("Server starting on port %s\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
