@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
@@ -13,22 +14,31 @@ import (
 	"github.com/joshua468/user-authentication/models"
 )
 
-func main() {
+var (
+	db  *gorm.DB
+	cfg *config.Config
+)
+
+func init() {
 	// Load configuration
-	cfg := config.LoadConfig()
+	cfg = config.LoadConfig()
 
 	// Database connection
 	dsn := "host=" + cfg.DBHost + " user=" + cfg.DBUser + " password=" + cfg.DBPassword + " dbname=" + cfg.DBName + " port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	// Migrate the schema
 	db.AutoMigrate(&models.User{}, &models.Organisation{})
+}
 
+// Handler is the exported function for Vercel
+func Handler(w http.ResponseWriter, r *http.Request) {
 	// Set up Gin
-	r := gin.Default()
+	router := gin.Default()
 
 	// Initialize controllers
 	authController := controllers.NewAuthController(db, cfg.JWTSecret)
@@ -36,7 +46,7 @@ func main() {
 	userController := controllers.NewUserController(db)
 
 	// Routes
-	api := r.Group("/api")
+	api := router.Group("/api")
 	{
 		authRoutes := api.Group("/auth")
 		{
@@ -56,6 +66,11 @@ func main() {
 		}
 	}
 
-	// Run the server
-	r.Run()
+	// Serve the request
+	router.ServeHTTP(w, r)
+}
+
+func main() {
+	http.HandleFunc("/", Handler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
