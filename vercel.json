@@ -7,6 +7,9 @@
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "main.go" }
+    {
+      "src": "/(.*)",
+      "dest": "main.go"
+    }
   ]
 }
