@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"log"
@@ -73,14 +73,4 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Serve the request
 	router.ServeHTTP(w, r)
-}
-
-func main() {
-	// Define HTTP handler
-	http.HandleFunc("/", Handler)
-
-	// Start HTTP server
-	port := ":8080"
-	log.Printf("Server starting on port %s\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
 }
