@@ -18,15 +18,15 @@ var db *gorm.DB
 
 func connect() {
 
-	DBHost := os.Getenv("DB_HOST")
-	DBUser := os.Getenv("DB_USER")
-	DBPassword := os.Getenv("DB_PASSWORD")
-	DBName := os.Getenv("DB_NAME")
-	PORT := os.Getenv("PORT")
+	dbhost := os.Getenv("DB_HOST")
+	dbuser := os.Getenv("DB_USER")
+	dbpassword := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	port := os.Getenv("PORT")
 
 	// Database connection
-	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable", DBHost, DBUser, DBPassword, DBName, PORT)
-
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable", dbhost, dbuser, dbpassword, dbname, port)
+	fmt.Println(dsn)
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -73,7 +73,7 @@ func loadserver() {
 	}
 
 	// Start server
-	if err := router.Run(); err != nil {
+	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
 	}
 }
