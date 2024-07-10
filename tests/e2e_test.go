@@ -315,7 +315,7 @@ func TestRegisterUserDuplicateEmail(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Contains(t, response["error"], "Failed to register user")
-	
+
 }
 
 func TestMain(m *testing.M) {
