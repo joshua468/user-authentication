@@ -22,7 +22,7 @@ func connect() {
 	dbuser := os.Getenv("DB_USER")
 	dbpassword := os.Getenv("DB_PASSWORD")
 	dbname := os.Getenv("DB_NAME")
-	port := os.Getenv("PORT")
+	port := os.Getenv("DB_PORT")
 
 	// Database connection
 	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable", dbhost, dbuser, dbpassword, dbname, port)
