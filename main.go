@@ -20,8 +20,8 @@ var (
 )
 
 func init() {
-	// Load environment variables from .env file in config folder
-	if err := godotenv.Load("./config/.env"); err != nil {
+	// Load environment variables from .env file in the root directory
+	if err := godotenv.Load(".env"); err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
