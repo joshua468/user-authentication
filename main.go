@@ -1,8 +1,7 @@
-package handler
+package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -41,8 +40,7 @@ func init() {
 	db.AutoMigrate(&models.User{}, &models.Organisation{})
 }
 
-// Handler is the exported function for Vercel
-func Handler(w http.ResponseWriter, r *http.Request) {
+func main() {
 	// Set up Gin
 	router := gin.Default()
 
@@ -72,6 +70,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Serve the request
-	router.ServeHTTP(w, r)
+	// Start server
+	if err := router.Run(); err != nil {
+		log.Fatalf("Failed to run server: %v", err)
+	}
 }
